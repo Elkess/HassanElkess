@@ -128,7 +128,7 @@ class ArtistPortfolioHandler(BaseHTTPRequestHandler):
 
 def run() -> None:
     ensure_data_file()
-    server = ThreadingHTTPServer(("0.0.0.0", 8000), ArtistPortfolioHandler)
+    server = ThreadingHTTPServer(("127.0.0.1", 8000), ArtistPortfolioHandler)
     print("Artist portfolio running on http://localhost:8000")
     server.serve_forever()
 

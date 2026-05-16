@@ -97,6 +97,15 @@
       const form = document.getElementById("artwork-form");
       const gallery = document.getElementById("gallery");
       const status = document.getElementById("status");
+      
+      function isValidImageUrl(value) {
+        try {
+          const parsed = new URL(value);
+          return parsed.protocol === "http:" || parsed.protocol === "https:";
+        } catch {
+          return false;
+        }
+      }
 
       function createCard(artwork) {
         const card = document.createElement("article");
@@ -128,7 +137,9 @@
           }
           const artworks = await response.json();
           gallery.innerHTML = "";
-          artworks.forEach((artwork) => gallery.appendChild(createCard(artwork)));
+          artworks
+            .filter((artwork) => isValidImageUrl(artwork.imageUrl || ""))
+            .forEach((artwork) => gallery.appendChild(createCard(artwork)));
           status.textContent = "";
         } catch (error) {
           status.textContent = error.message || "Unable to load artworks.";
@@ -142,6 +153,10 @@
           imageUrl: document.getElementById("imageUrl").value,
           description: document.getElementById("description").value,
         };
+        if (!isValidImageUrl(payload.imageUrl)) {
+          status.textContent = "Image URL must start with http:// or https://";
+          return;
+        }
 
         try {
           const response = await fetch("/api/artworks", {
