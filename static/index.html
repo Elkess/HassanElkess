@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artist Portfolio</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #111;
+        color: #fff;
+      }
+
+      header {
+        padding: 2rem 1rem 1rem;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      form {
+        display: grid;
+        gap: 0.75rem;
+        background: #1c1c1c;
+        padding: 1rem;
+        border-radius: 12px;
+      }
+
+      input,
+      textarea,
+      button {
+        font: inherit;
+        border-radius: 8px;
+        border: none;
+        padding: 0.75rem;
+      }
+
+      button {
+        background: #f59e0b;
+        color: #111;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      #status {
+        margin-top: 0.75rem;
+        min-height: 1.25rem;
+        color: #facc15;
+      }
+
+      .card {
+        background: #1c1c1c;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .card-content {
+        padding: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Artist Portfolio</h1>
+      <p>Show your artwork and publish directly from your own website.</p>
+    </header>
+    <main class="container">
+      <form id="artwork-form">
+        <input id="title" placeholder="Artwork title" required />
+        <input id="imageUrl" type="url" placeholder="Image URL" required />
+        <textarea id="description" rows="3" placeholder="Description"></textarea>
+        <button type="submit">Post artwork</button>
+      </form>
+      <p id="status" role="status" aria-live="polite"></p>
+      <section class="gallery" id="gallery"></section>
+    </main>
+
+    <script>
+      const form = document.getElementById("artwork-form");
+      const gallery = document.getElementById("gallery");
+      const status = document.getElementById("status");
+      
+      function isValidImageUrl(value) {
+        try {
+          const parsed = new URL(value);
+          return parsed.protocol === "http:" || parsed.protocol === "https:";
+        } catch {
+          return false;
+        }
+      }
+
+      function createCard(artwork) {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const image = document.createElement("img");
+        image.src = artwork.imageUrl;
+        image.alt = artwork.title;
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const title = document.createElement("h3");
+        title.textContent = artwork.title;
+
+        const description = document.createElement("p");
+        description.textContent = artwork.description || "";
+
+        content.append(title, description);
+        card.append(image, content);
+        return card;
+      }
+
+      async function loadArtworks() {
+        try {
+          const response = await fetch("/api/artworks");
+          if (!response.ok) {
+            throw new Error("Unable to load artworks.");
+          }
+          const artworks = await response.json();
+          gallery.innerHTML = "";
+          artworks
+            .filter((artwork) => isValidImageUrl(artwork.imageUrl || ""))
+            .forEach((artwork) => gallery.appendChild(createCard(artwork)));
+          status.textContent = "";
+        } catch (error) {
+          status.textContent = error.message || "Unable to load artworks.";
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const payload = {
+          title: document.getElementById("title").value,
+          imageUrl: document.getElementById("imageUrl").value,
+          description: document.getElementById("description").value,
+        };
+        if (!isValidImageUrl(payload.imageUrl)) {
+          status.textContent = "Image URL must start with http:// or https://";
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/artworks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await response.json();
+          if (!response.ok) {
+            throw new Error(body.error || "Unable to post artwork.");
+          }
+
+          form.reset();
+          status.textContent = "Artwork posted.";
+          await loadArtworks();
+        } catch (error) {
+          status.textContent = error.message || "Unable to post artwork.";
+        }
+      });
+
+      loadArtworks();
+    </script>
+  </body>
+</html>
