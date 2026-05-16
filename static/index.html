@@ -54,6 +54,12 @@
         margin-top: 1rem;
       }
 
+      #status {
+        margin-top: 0.75rem;
+        min-height: 1.25rem;
+        color: #facc15;
+      }
+
       .card {
         background: #1c1c1c;
         border-radius: 12px;
@@ -83,12 +89,14 @@
         <textarea id="description" rows="3" placeholder="Description"></textarea>
         <button type="submit">Post artwork</button>
       </form>
+      <p id="status" role="status" aria-live="polite"></p>
       <section class="gallery" id="gallery"></section>
     </main>
 
     <script>
       const form = document.getElementById("artwork-form");
       const gallery = document.getElementById("gallery");
+      const status = document.getElementById("status");
 
       function createCard(artwork) {
         const card = document.createElement("article");
@@ -113,10 +121,18 @@
       }
 
       async function loadArtworks() {
-        const response = await fetch("/api/artworks");
-        const artworks = await response.json();
-        gallery.innerHTML = "";
-        artworks.forEach((artwork) => gallery.appendChild(createCard(artwork)));
+        try {
+          const response = await fetch("/api/artworks");
+          if (!response.ok) {
+            throw new Error("Unable to load artworks.");
+          }
+          const artworks = await response.json();
+          gallery.innerHTML = "";
+          artworks.forEach((artwork) => gallery.appendChild(createCard(artwork)));
+          status.textContent = "";
+        } catch (error) {
+          status.textContent = error.message || "Unable to load artworks.";
+        }
       }
 
       form.addEventListener("submit", async (event) => {
@@ -127,14 +143,23 @@
           description: document.getElementById("description").value,
         };
 
-        await fetch("/api/artworks", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        try {
+          const response = await fetch("/api/artworks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const body = await response.json();
+          if (!response.ok) {
+            throw new Error(body.error || "Unable to post artwork.");
+          }
 
-        form.reset();
-        await loadArtworks();
+          form.reset();
+          status.textContent = "Artwork posted.";
+          await loadArtworks();
+        } catch (error) {
+          status.textContent = error.message || "Unable to post artwork.";
+        }
       });
 
       loadArtworks();

@@ -33,6 +33,19 @@ class AppStorageTests(unittest.TestCase):
         self.assertFalse(app.is_valid_image_url("file:///tmp/image.jpg"))
         self.assertFalse(app.is_valid_image_url("example.com/image.jpg"))
 
+    def test_next_artwork_id_uses_max_numeric_value(self) -> None:
+        self.assertEqual("1", app.next_artwork_id([]))
+        self.assertEqual(
+            "11",
+            app.next_artwork_id(
+                [
+                    {"id": "10"},
+                    {"id": "2"},
+                    {"id": "abc"},
+                ]
+            ),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

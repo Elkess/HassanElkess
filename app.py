@@ -30,10 +30,19 @@ def save_artworks(artworks: list[dict[str, str]]) -> None:
         json.dump(artworks, file, indent=2)
 
 
+def next_artwork_id(artworks: list[dict[str, str]]) -> str:
+    max_id = 0
+    for artwork in artworks:
+        raw_id = str(artwork.get("id", "")).strip()
+        if raw_id.isdigit():
+            max_id = max(max_id, int(raw_id))
+    return str(max_id + 1)
+
+
 def add_artwork(title: str, image_url: str, description: str) -> dict[str, str]:
     artworks = load_artworks()
     artwork = {
-        "id": str(len(artworks) + 1),
+        "id": next_artwork_id(artworks),
         "title": title.strip(),
         "imageUrl": image_url.strip(),
         "description": description.strip(),
