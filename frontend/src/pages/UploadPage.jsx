@@ -2,10 +2,12 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function UploadPage() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -48,7 +50,7 @@ export default function UploadPage() {
     setError('');
     
     if (!formData.title || !formData.image) {
-      setError('Title and image are required');
+      setError(t.common.loading ? t.common.loading : 'Title and image are required');
       return;
     }
 
@@ -80,7 +82,7 @@ export default function UploadPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Upload Your Artwork</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.upload.uploadArtworkTitle}</h1>
 
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -107,15 +109,15 @@ export default function UploadPage() {
               {preview ? (
                 <div>
                   <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg mb-4" />
-                  <p className="text-sm text-gray-600">Click to change image</p>
+                  <p className="text-sm text-gray-600">{t.upload.clickChangeImage}</p>
                 </div>
               ) : (
                 <div>
                   <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-8l-3.172-3.172a4 4 0 00-5.656 0L28 28M12 28l-3.172-3.172a4 4 0 00-5.656 0L2 28m34-14h.01M12 20h.01" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <p className="mt-2 text-sm font-medium text-gray-900">Click to upload or drag and drop</p>
-                  <p className="mt-1 text-xs text-gray-500">PNG, JPG, GIF, WebP up to 50MB</p>
+                  <p className="mt-2 text-sm font-medium text-gray-900">{t.upload.clickUploadOrDrag}</p>
+                  <p className="mt-1 text-xs text-gray-500">{t.upload.acceptedFormats}</p>
                 </div>
               )}
             </label>
@@ -125,7 +127,7 @@ export default function UploadPage() {
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Title *
+            {t.common.loading ? t.common.loading : 'Title *'}
           </label>
           <input
             type="text"
@@ -134,14 +136,14 @@ export default function UploadPage() {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-            placeholder="Artwork title"
+            placeholder={t.upload.uploadArtworkTitle}
           />
         </div>
 
         {/* Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Description
+            {t.art.description}
           </label>
           <textarea
             name="description"
@@ -149,7 +151,7 @@ export default function UploadPage() {
             onChange={handleChange}
             rows="4"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-            placeholder="Describe your artwork"
+            placeholder={t.art.description}
           />
         </div>
 
@@ -182,14 +184,14 @@ export default function UploadPage() {
               className="w-4 h-4"
             />
             <label htmlFor="for-sale" className="ml-2 text-sm font-medium text-gray-700">
-              This artwork is for sale
+              {t.dashboard.forSale}
             </label>
           </div>
 
           {formData.isForSale && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price (DH)
+                {t.art.price} (DH)
               </label>
               <input
                 type="number"
@@ -211,7 +213,7 @@ export default function UploadPage() {
           disabled={loading}
           className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50"
         >
-          {loading ? 'Uploading...' : 'Upload Artwork'}
+          {loading ? 'Uploading...' : t.upload.uploadArtworkTitle}
         </button>
       </form>
     </div>

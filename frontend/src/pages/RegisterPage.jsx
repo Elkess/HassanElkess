@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -12,6 +13,23 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const Spinner = () => (
+    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+  );
+
+  const buttonContent = loading ? (
+    <span className="flex items-center justify-center">
+      <Spinner />
+      {t.register.creatingAccount}
+    </span>
+  ) : (
+    t.register.getStarted
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,8 +65,8 @@ export default function RegisterPage() {
       
       <div className="max-w-md w-full bg-white p-10 rounded-[2.5rem] shadow-2xl shadow-indigo-100/50 border border-gray-100 relative z-10">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">Create Account</h2>
-          <p className="text-gray-500 font-medium">Join our artistic community today.</p>
+          <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">{t.register.createAccount}</h2>
+          <p className="text-gray-500 font-medium">{t.register.joinCommunity}</p>
         </div>
 
         {error && (
@@ -87,23 +105,23 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
-              Email Address
-            </label>
+              <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
+                {t.auth.emailAddress}
+              </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-6 py-4 bg-gray-50 border-transparent border-2 rounded-2xl focus:bg-white focus:border-indigo-600 focus:ring-0 transition-all outline-none text-gray-900 font-medium"
-              placeholder="hello@example.com"
+              placeholder={t.auth.placeholderEmail}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
-                Password
+                {t.auth.password}
               </label>
               <input
                 type="password"
@@ -111,7 +129,7 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-transparent border-2 rounded-2xl focus:bg-white focus:border-indigo-600 focus:ring-0 transition-all outline-none text-gray-900 font-medium text-lg"
-                placeholder="••••••"
+                placeholder={t.auth.placeholderPassword}
               />
             </div>
             <div className="space-y-1">
@@ -124,27 +142,13 @@ export default function RegisterPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 className="w-full px-6 py-4 bg-gray-50 border-transparent border-2 rounded-2xl focus:bg-white focus:border-indigo-600 focus:ring-0 transition-all outline-none text-gray-900 font-medium text-lg"
-                placeholder="••••••"
+                placeholder={t.auth.placeholderPassword}
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gray-900 text-white py-5 rounded-2xl font-bold text-lg hover:bg-black hover:shadow-xl hover:shadow-gray-200 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Creating Account...
-              </span>
-            ) : (
-              'Get Started'
-            )}
+          <button type="submit" disabled={loading} className="w-full bg-gray-900 text-white py-5 rounded-2xl font-bold text-lg hover:bg-black transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+            {buttonContent}
           </button>
         </form>
 

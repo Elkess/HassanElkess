@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -6,7 +7,8 @@ export default function ArtDetailPage() {
   const { artId } = useParams();
   const [art, setArt] = useState(null);
   const [loading, setLoading] = useState(true);
-  const formatDh = (value) => `${Number(value).toLocaleString('fr-MA')} DH`;
+  const { t, locale } = useLanguage();
+  const formatDh = (value) => `${Number(value).toLocaleString(locale)} DH`;
 
   useEffect(() => {
     fetchArtwork();
@@ -35,7 +37,7 @@ export default function ArtDetailPage() {
   if (!art) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Artwork not found</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t.art.notFound}</h1>
       </div>
     );
   }
@@ -77,25 +79,25 @@ export default function ArtDetailPage() {
           {/* Metadata */}
           <div className="space-y-4 mb-6">
             <div>
-              <p className="text-sm text-gray-600">Category</p>
+              <p className="text-sm text-gray-600">{t.art.category}</p>
               <p className="text-lg font-semibold text-gray-900 capitalize">{art.category}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Views</p>
+              <p className="text-sm text-gray-600">{t.art.views}</p>
               <p className="text-lg font-semibold text-gray-900">{art.views}</p>
             </div>
 
             {art.price && art.isForSale && (
               <div>
-                <p className="text-sm text-gray-600">Price</p>
+                <p className="text-sm text-gray-600">{t.art.price}</p>
                 <p className="text-lg font-semibold text-gray-900">{formatDh(art.price)}</p>
               </div>
             )}
 
             {art.tags && art.tags.length > 0 && (
               <div>
-                <p className="text-sm text-gray-600 mb-2">Tags</p>
+                <p className="text-sm text-gray-600 mb-2">{t.art.tags}</p>
                 <div className="flex flex-wrap gap-2">
                   {art.tags.map((tag, index) => (
                     <span
@@ -113,7 +115,7 @@ export default function ArtDetailPage() {
           {/* Description */}
           {art.description && (
             <div className="mb-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">{t.art.description}</h3>
               <p className="text-gray-700">{art.description}</p>
             </div>
           )}
@@ -121,7 +123,7 @@ export default function ArtDetailPage() {
           {/* Action Button */}
           {art.isForSale && art.price && (
             <button className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
-              Contact Artist
+              {t.art.contactArtist}
             </button>
           )}
         </div>
@@ -129,7 +131,7 @@ export default function ArtDetailPage() {
 
       {/* More from artist */}
       <div className="mt-16 pt-12 border-t">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">More from this Artist</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">{t.art.moreFromArtist}</h2>
         {/* You can add similar artworks here */}
       </div>
     </div>

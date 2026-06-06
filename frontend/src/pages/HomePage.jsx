@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HomePage() {
   const { user } = useContext(AuthContext);
+  const { t } = useLanguage();
 
   return (
     <div className="bg-white">
@@ -16,7 +18,7 @@ export default function HomePage() {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-indigo-600 uppercase bg-indigo-50 rounded-full">
-            The Official Portfolio
+            {t.home.tag}
           </span>
           <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 tracking-tighter leading-tight">
             HASSAN <br />
@@ -25,29 +27,28 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-500 mb-12 leading-relaxed">
-            A personal showcase centered on painting through Khat Arabi, where Arabic letterforms,
-            rhythm, and color come together in contemporary visual compositions.
+            {t.home.heroDesc}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/gallery"
               className="w-full sm:w-auto inline-flex items-center justify-center bg-gray-900 text-white px-10 py-4 rounded-full font-bold hover:bg-gray-800 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-gray-200"
             >
-              Explore Gallery
+              {t.home.exploreGallery}
             </Link>
             {!user ? (
               <Link
                 to="/gallery"
                 className="w-full sm:w-auto inline-flex items-center justify-center bg-white border-2 border-gray-100 text-gray-900 px-10 py-4 rounded-full font-bold hover:border-indigo-600 hover:text-indigo-600 transition-all"
               >
-                View Full Collection
+                {t.home.viewFullCollection}
               </Link>
             ) : (
               <Link
                 to="/upload"
                 className="w-full sm:w-auto inline-flex items-center justify-center bg-indigo-50 text-indigo-700 px-10 py-4 rounded-full font-bold hover:bg-indigo-100 transition-all"
               >
-                Upload New Work
+                {t.home.uploadNewWork}
               </Link>
             )}
           </div>
@@ -77,25 +78,25 @@ export default function HomePage() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">Artistic Philosophy</h2>
-            <p className="text-gray-500 text-lg">Blending traditional techniques with digital innovation.</p>
+            <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">{t.home.artisticPhilosophy}</h2>
+            <p className="text-gray-500 text-lg">{t.home.heroDesc}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-12">
             {[
               {
-                title: 'Digital Mastery',
+                title: t.home.features.digitalMastery,
                 desc: 'Exploring the boundaries of digital mediums to create immersive visual experiences.',
                 icon: '🪄',
                 color: 'bg-rose-50'
               },
               {
-                title: 'Khat Arabi Painting',
+                title: t.home.features.khatArabi,
                 desc: 'Original works built from Arabic calligraphy strokes, layered texture, and expressive motion.',
                 icon: '📱',
                 color: 'bg-indigo-50'
               },
               {
-                title: 'Creative Vision',
+                title: t.home.features.creativeVision,
                 desc: 'Transforming abstract concepts into tangible art that speaks to the soul.',
                 icon: '🔒',
                 color: 'bg-emerald-50'
@@ -132,14 +133,14 @@ export default function HomePage() {
                   to="/gallery"
                   className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-bold hover:bg-indigo-50 transition-all"
                 >
-                  Browse the Collection
+                  {t.home.browseCollection}
                 </Link>
               ) : (
                 <Link
                   to="/upload"
                   className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-bold hover:bg-indigo-50 transition-all"
                 >
-                  Manage Portfolio
+                  {t.home.managePortfolio}
                 </Link>
               )}
             </div>

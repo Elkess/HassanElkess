@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -31,10 +32,11 @@ export default function GalleryPage() {
   };
 
   const totalPages = Math.ceil(total / 12);
+  const { t } = useLanguage();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Art Gallery</h1>
+      <h1 className="text-4xl font-bold text-gray-900 mb-8">{t.gallery.title}</h1>
 
       {/* Artworks Grid */}
       {loading ? (
@@ -43,7 +45,7 @@ export default function GalleryPage() {
         </div>
       ) : artworks.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
-          <p className="text-xl">No artworks found</p>
+          <p className="text-xl">{t.gallery.noArtworksFound}</p>
         </div>
       ) : (
         <>
@@ -63,7 +65,7 @@ export default function GalleryPage() {
                 </div>
                 <h3 className="font-semibold text-gray-900 truncate">{art.title}</h3>
                 <p className="text-sm text-gray-600 truncate">
-                  by {art.artist.artistName}
+                  {t.common.by} {art.artist.artistName}
                 </p>
               </Link>
             ))}
@@ -76,17 +78,17 @@ export default function GalleryPage() {
               disabled={page === 1}
               className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
             >
-              Previous
+              {t.pagination.previous}
             </button>
             <span className="text-gray-700">
-              Page {page} of {totalPages}
+              {t.pagination.pageOf.replace('{page}', page).replace('{total}', totalPages)}
             </span>
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
               className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
             >
-              Next
+              {t.pagination.next}
             </button>
           </div>
         </>

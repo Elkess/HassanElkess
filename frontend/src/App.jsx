@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
@@ -16,13 +16,14 @@ import './styles/index.css';
 
 function AppContent() {
   const { loading, user } = React.useContext(AuthContext);
+  const { t } = useLanguage();
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">{t.common.loading}</p>
         </div>
       </div>
     );

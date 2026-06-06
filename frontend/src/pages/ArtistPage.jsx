@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ArtistPage() {
   const { artistId } = useParams();
   const [artist, setArtist] = useState(null);
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchArtistAndWorks();
@@ -40,7 +42,7 @@ export default function ArtistPage() {
   if (!artist) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Artist not found</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t.artist.notFound}</h1>
       </div>
     );
   }
@@ -89,7 +91,7 @@ export default function ArtistPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Past Showcases</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{t.artist.pastShowcasesTitle}</h3>
             {artist.showcasesPast?.length ? (
               <ul className="space-y-2 text-gray-700">
                 {artist.showcasesPast.map((item, index) => (
@@ -100,12 +102,12 @@ export default function ArtistPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No past showcases added yet.</p>
+              <p className="text-gray-500">{t.artist.noPastShowcases}</p>
             )}
           </div>
 
           <div className="bg-indigo-50 rounded-2xl p-6 border border-indigo-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Upcoming Showcases</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{t.artist.upcomingShowcasesTitle}</h3>
             {artist.showcasesUpcoming?.length ? (
               <ul className="space-y-2 text-gray-700">
                 {artist.showcasesUpcoming.map((item, index) => (
@@ -116,15 +118,15 @@ export default function ArtistPage() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No upcoming showcases announced yet.</p>
+              <p className="text-gray-500">{t.artist.noUpcomingShowcases}</p>
             )}
           </div>
         </div>
 
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Artworks ({artworks.length})</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">{t.artist.artworksTitle} ({artworks.length})</h2>
         
         {artworks.length === 0 ? (
-          <p className="text-gray-600 text-center py-12">This artist hasn't uploaded any artwork yet.</p>
+          <p className="text-gray-600 text-center py-12">{t.artist.noArtworks}</p>
         ) : (
           <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
             {artworks.map((art) => (

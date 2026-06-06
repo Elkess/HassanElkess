@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ProfilePage() {
   const { user, updateProfile } = useContext(AuthContext);
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     artistName: '',
     bio: '',
@@ -109,17 +111,17 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Profile</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">{t.profile.editProfile}</h1>
 
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-700">{error}</p>
+          <p className="text-red-700">{error || t.profile.updateFailed}</p>
         </div>
       )}
 
       {success && (
         <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-700">{success}</p>
+          <p className="text-green-700">{success || t.profile.updateSuccess}</p>
         </div>
       )}
 
@@ -127,7 +129,7 @@ export default function ProfilePage() {
         {/* Profile Image */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-4">
-            Profile Picture
+            {t.profile.profilePicture}
           </label>
           <div className="flex items-center space-x-6">
             <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden">
@@ -153,7 +155,7 @@ export default function ProfilePage() {
         {/* Artist Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Artist Name
+            {t.profile.artistName}
           </label>
           <input
             type="text"
@@ -161,14 +163,14 @@ export default function ProfilePage() {
             value={formData.artistName}
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-            placeholder="Your artist name"
+            placeholder={t.profile.artistName}
           />
         </div>
 
         {/* Bio */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Bio
+            {t.profile.bio}
           </label>
           <textarea
             name="bio"
@@ -176,13 +178,13 @@ export default function ProfilePage() {
             onChange={handleChange}
             rows="5"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-            placeholder="Tell us about yourself and your art..."
+            placeholder={t.profile.bio}
           />
         </div>
 
         {/* Social Links */}
         <div className="border-t pt-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Social Links</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t.profile.socialLinks}</h3>
           
           <div className="space-y-4">
             <div>
@@ -231,11 +233,11 @@ export default function ProfilePage() {
 
         {/* Showcases */}
         <div className="border-t pt-6 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Showcases & Exhibitions</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t.profile.showcasesTitle}</h3>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Past Showcases (one per line)
+              {t.artist.pastShowcasesTitle} (one per line)
             </label>
             <textarea
               name="showcasesPastText"
@@ -243,13 +245,13 @@ export default function ProfilePage() {
               onChange={handleChange}
               rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-              placeholder="Casablanca Art Week 2024 - Khat Arabi Collection"
+              placeholder={t.profile.pastShowcasesPlaceholder}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upcoming Showcases (one per line)
+              {t.artist.upcomingShowcasesTitle} (one per line)
             </label>
             <textarea
               name="showcasesUpcomingText"
@@ -257,7 +259,7 @@ export default function ProfilePage() {
               onChange={handleChange}
               rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none"
-              placeholder="Rabat Contemporary Art Salon 2026 - New Khat Arabi Series"
+              placeholder={t.profile.upcomingShowcasesPlaceholder}
             />
           </div>
         </div>
@@ -268,7 +270,7 @@ export default function ProfilePage() {
           disabled={loading}
           className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition disabled:opacity-50"
         >
-          {loading ? 'Saving...' : 'Save Changes'}
+          {loading ? t.profile.saving : t.profile.saveChanges}
         </button>
       </form>
     </div>
